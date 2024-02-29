@@ -13,11 +13,11 @@ interface DB {
     houses: HousesResponse,                         // db data
     synced: boolean,                                // data fetched from API or using local copy
     init: (sync: boolean) => Promise<void>          // initalize DB houses [sync=true to force fetching from remote API]
-    query: (query: DBQuery) => HousesResponse       // execute a query on houses items
+    query: (query: DBQuery | null) => HousesResponse       // execute a query on houses items
 }
 
 // database query interface
-interface DBQuery {
+export interface DBQuery {
     key: keyof HousesResponseItem,
     text: string
 }
@@ -28,7 +28,11 @@ const isValidKey = (item: HousesResponseItem, key: string): boolean => {
 }
 
 // query function
-const queryFunc = (items: HousesResponse, query: DBQuery) => {
+const queryFunc = (items: HousesResponse, query: DBQuery | null) => {
+    // empty query, return all items
+    if(!query) return items;
+    
+    // check key is valid
     const { key, text } = query;
     if(!isValidKey(items[0], key)) throw Error(`$Query key ${key} is not valid`);
 
@@ -70,7 +74,7 @@ const db: DB = {
         this.houses = data;
     },
 
-    query: function(query: DBQuery) {
+    query: function(query: DBQuery | null) {
         return queryFunc(this.houses, query);
     }
 }

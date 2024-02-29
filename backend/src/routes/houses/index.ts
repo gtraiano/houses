@@ -6,19 +6,22 @@ const route = Router();
 
 route.get('/', (req: Request, res: Response ) => {
     try {
-        const entries = Object.entries(req.query);
-        // single query parameter (ok)
-        if(entries.length === 1) {
-            const [key, text] = entries[0];
-            const results = db.query({ key: key as unknown as keyof HousesResponseItem, text: text as unknown as string });
-            res.json(results);
-        }
+        const params = Object.entries(req.query);
+        let query = null;
+
         // multiple parameters (no implementation yet)
-        else {
-            throw Error('Only queries with a single parameter are allowed');
-        }
+        if(params.length > 1) throw Error('Only queries with a single parameter are allowed');
+        // get parameter and value (or null for both if it does not exist)
+        const [key, text] = params[0] ?? [null, null];
+        // update query object
+        query = key && text
+            ? { key: key as unknown as keyof HousesResponseItem, text: text as unknown as string }
+            : query;
+        const results = db.query(query);
+        res.json(results);
     }
     catch(e: any) {
+        console.log(e);
         res.status(400).json({ error: e.message });
     }
 });
