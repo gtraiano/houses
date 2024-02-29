@@ -1,10 +1,9 @@
 // simple DB interface for API data, all operations performed in memory
 // only Read operations currently allowed
-import { HousesResponse } from "../../../types";
+import { HousesDBQueryKey, HousesDB, HousesDBQuery, HousesResponse } from "../../../types";
 import { fetchHouses } from "../controllers/houses";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
-import { DB, DBQuery, DBQueryKey } from "./types";
 
 // local JSON file path
 const fileDirectory = path.join(__dirname, "./data/");
@@ -19,10 +18,10 @@ const syncfile = (data: any) => {
 }
 
 // check query key validity
-const isValidQueryKey = (db: DB, key: string): boolean => db.validQueryKeys.findIndex(k => k === key) !== -1;
+const isValidQueryKey = (db: HousesDB, key: string): boolean => db.validQueryKeys.findIndex(k => k === key) !== -1;
 
 // query function
-const queryFunc = (db: DB, query: DBQuery | null) => {
+const queryFunc = (db: HousesDB, query: HousesDBQuery| null) => {
     // empty query, return all items
     if(!query || !query.key || !query.text) return db.houses;
     
@@ -46,30 +45,36 @@ const queryFunc = (db: DB, query: DBQuery | null) => {
     });
 }
 
-const db: DB = {
+const db: HousesDB = {
     houses: [],
     synced: false,
     validQueryKeys: [],
     init: async function(sync: boolean = false) {
-        // local file exists
-        const exists = existsSync(filePath);
-        let data: HousesResponse;
-        
-        if(!sync && exists) {
-            // parse local copy
-            data = JSON.parse(readFileSync(filePath).toString());
+        try {
+            // local file exists
+            const exists = existsSync(filePath);
+            let data: HousesResponse;
+            
+            if(!sync && exists) {
+                // parse local copy
+                data = JSON.parse(readFileSync(filePath).toString());
+            }
+            else {
+                // fetch from remote API and update local copy
+                data = await fetchHouses();
+                syncfile(data);
+                this.synced = true;
+            }
+            this.houses = data;
+            this.validQueryKeys = Object.keys(data[0]) as [HousesDBQueryKey];
         }
-        else {
-            data = await fetchHouses();
-            // update local copy
-            syncfile(data);
-            this.synced = true;
+        catch(e) {
+            console.error(e);
+            this.houses = JSON.parse(readFileSync(filePath).toString());
         }
-        this.houses = data;
-        this.validQueryKeys = Object.keys(data[0]) as [DBQueryKey];
     },
 
-    query: function(query: DBQuery | null) {
+    query: function(query: HousesDBQuery | null) {
         return queryFunc(this, query);
     }
 }
