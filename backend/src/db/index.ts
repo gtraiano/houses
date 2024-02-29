@@ -2,15 +2,22 @@
 // only Read operations currently allowed
 import { HousesResponse } from "../../../types";
 import { fetchHouses } from "../controllers/houses";
-import { existsSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import { DB, DBQuery, DBQueryKey } from "./types";
 
 // local JSON file path
-const filePath = path.join(__dirname, "./data/houses.json");
+const fileDirectory = path.join(__dirname, "./data/");
+const filePath = path.join(fileDirectory, "./houses.json");
 
-// valid query keys
-const validQueryKeys: [DBQueryKey?] = [];
+// updates local JSON file
+const syncfile = (data: any) => {
+    if(!existsSync(fileDirectory)) {
+        mkdirSync(fileDirectory);
+    }
+    writeFileSync(filePath, JSON.stringify(data, null, 2), { flag: 'w', encoding: 'utf-8' });
+}
+
 // check query key validity
 const isValidQueryKey = (db: DB, key: string): boolean => db.validQueryKeys.findIndex(k => k === key) !== -1;
 
@@ -55,7 +62,7 @@ const db: DB = {
         else {
             data = await fetchHouses();
             // update local copy
-            writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+            syncfile(data);
             this.synced = true;
         }
         this.houses = data;
