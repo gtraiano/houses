@@ -1,45 +1,32 @@
 // simple DB interface for API data, all operations performed in memory
 // only Read operations currently allowed
-import { HousesResponse, HousesResponseItem } from "../../../types";
+import { HousesResponse } from "../../../types";
 import { fetchHouses } from "../controllers/houses";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
+import { DB, DBQuery, DBQueryKey } from "./types";
 
 // local JSON file path
 const filePath = path.join(__dirname, "./data/houses.json");
 
-// database interface
-interface DB {
-    houses: HousesResponse,                         // db data
-    synced: boolean,                                // data fetched from API or using local copy
-    init: (sync: boolean) => Promise<void>          // initalize DB houses [sync=true to force fetching from remote API]
-    query: (query: DBQuery | null) => HousesResponse       // execute a query on houses items
-}
-
-// database query interface
-export interface DBQuery {
-    key: keyof HousesResponseItem,
-    text: string
-}
-
-const isValidKey = (item: HousesResponseItem, key: string): boolean => {
-    const keys = Object.keys(item);
-    return keys.includes(key);
-}
+// valid query keys
+const validQueryKeys: [DBQueryKey?] = [];
+// check query key validity
+const isValidQueryKey = (db: DB, key: string): boolean => db.validQueryKeys.findIndex(k => k === key) !== -1;
 
 // query function
-const queryFunc = (items: HousesResponse, query: DBQuery | null) => {
+const queryFunc = (db: DB, query: DBQuery | null) => {
     // empty query, return all items
-    if(!query) return items;
+    if(!query) return db.houses;
     
     // check key is valid
     const { key, text } = query;
-    if(!isValidKey(items[0], key)) throw Error(`$Query key ${key} is not valid`);
+    if(!isValidQueryKey(db, key)) throw Error(`Query key ${key} is not valid`);
 
     // regular expression for comparison
     const searchRE = new RegExp(text.trim(), 'gi');
     
-    return items.filter(item => {
+    return db.houses.filter(item => {
         // using logical OR for traits and heads sub-objects
         // iterate through all object's values
         if(key === 'traits' || key === 'heads') {
@@ -55,7 +42,7 @@ const queryFunc = (items: HousesResponse, query: DBQuery | null) => {
 const db: DB = {
     houses: [],
     synced: false,
-
+    validQueryKeys: [],
     init: async function(sync: boolean = false) {
         // local file exists
         const exists = existsSync(filePath);
@@ -72,10 +59,11 @@ const db: DB = {
             this.synced = true;
         }
         this.houses = data;
+        this.validQueryKeys = Object.keys(data[0]) as [DBQueryKey];
     },
 
     query: function(query: DBQuery | null) {
-        return queryFunc(this.houses, query);
+        return queryFunc(this, query);
     }
 }
 
