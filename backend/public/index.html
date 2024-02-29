@@ -1,23 +1,85 @@
 <h1>Houses REST API</h1>
 <p>Welcome to houses REST API.</p>
-<p>Supported parameter for your GET requests</p>
-<table style="width: 25vw;line-height: 1.5;text-align: left;">
+<p>Supported endpoint/parameter combinations for your GET requests</p>
+<table>
     <thead>
-        <th>endpoint</th>
-        <th>description</th>
+        <tr>
+            <th>endpoint</th>
+            <th>parameter</th>
+            <th>query by</th>
+        </tr>
+        <tr>
+            <td colspan="3"><hr></td>
+        </tr>
     </thead>
     <tbody>
         <tr>
+            <td>houses</td>
+            <td>id</td>
+            <td>house id</td>
+        </tr>
+        <tr>
+            <td>houses</td>
             <td>name</td>
-            <td>filter by name</td>
+            <td>house name</td>
         </tr>
         <tr>
-            <td>colors</td>
-            <td>filter by color</td>
+            <td>houses</td>
+            <td>houseColors</td>
+            <td>house colours</td>
         </tr>
         <tr>
+            <td>houses</td>
             <td>founder</td>
-            <td>filter by founder</td>
+            <td>house founder</td>
+        </tr>
+        <tr>
+            <td>houses</td>
+            <td>animal</td>
+            <td>house animal</td>
+        </tr>
+        <tr>
+            <td>houses</td>
+            <td>element</td>
+            <td>house element</td>
+        </tr>
+        <tr>
+            <td>houses</td>
+            <td>ghost</td>
+            <td>house ghost</td>
+        </tr>
+        <tr>
+            <td>houses</td>
+            <td>commonRoom</td>
+            <td>house common room</td>
+        </tr>
+        <tr>
+            <td>houses</td>
+            <td>heads</td>
+            <td>value contained in house heads</td>
+        </tr>
+        <tr>
+            <td>houses</td>
+            <td>traits</td>
+            <td>value contained in house traits</td>
         </tr>
     </tbody>
 </table>
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: larger;
+    }
+    table {
+        line-height: 1.5;
+        text-align: left;
+        min-width: 25vw;
+        font-size: inherit;
+        border-spacing: 15px;
+    }
+    table > tbody > tr > td:nth-child(-n+2) {
+        font-family: monospace;
+    }
+</style>
