@@ -6,7 +6,7 @@
         <tr>
             <th>endpoint</th>
             <th>parameter</th>
-            <th>query by</th>
+            <th>description</th>
         </tr>
         <tr>
             <td colspan="3"><hr></td>
@@ -16,52 +16,57 @@
         <tr>
             <td>houses</td>
             <td>id</td>
-            <td>house id</td>
+            <td>query by house id</td>
         </tr>
         <tr>
             <td>houses</td>
             <td>name</td>
-            <td>house name</td>
+            <td>query by house name</td>
         </tr>
         <tr>
             <td>houses</td>
             <td>houseColors</td>
-            <td>house colours</td>
+            <td>query by house colours</td>
         </tr>
         <tr>
             <td>houses</td>
             <td>founder</td>
-            <td>house founder</td>
+            <td>query by house founder</td>
         </tr>
         <tr>
             <td>houses</td>
             <td>animal</td>
-            <td>house animal</td>
+            <td>query by house animal</td>
         </tr>
         <tr>
             <td>houses</td>
             <td>element</td>
-            <td>house element</td>
+            <td>query by house element</td>
         </tr>
         <tr>
             <td>houses</td>
             <td>ghost</td>
-            <td>house ghost</td>
+            <td>query by house ghost</td>
         </tr>
         <tr>
             <td>houses</td>
             <td>commonRoom</td>
-            <td>house common room</td>
+            <td>query by house common room</td>
         </tr>
         <tr>
             <td>houses</td>
             <td>heads</td>
-            <td>value contained in house heads</td>
+            <td>query by value contained in house heads</td>
         </tr>
         <tr>
             <td>houses</td>
             <td>traits</td>
-            <td>value contained in house traits</td>
+            <td>query by value contained in house traits</td>
+        </tr>
+        <tr>
+            <td>houses/querykeys</td>
+            <td></td>
+            <td>get all valid query keys</td>
         </tr>
     </tbody>
 </table>
@@ -78,6 +83,9 @@
         min-width: 25vw;
         font-size: inherit;
         border-spacing: 15px;
+    }
+    table > tbody > tr > td:first-child {
+        font-weight: bold;
     }
     table > tbody > tr > td:nth-child(-n+2) {
         font-family: monospace;
