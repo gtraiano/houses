@@ -4,9 +4,10 @@
   "description": "node.js + express bakend for houses project",
   "main": "src/index.js",
   "scripts": {
-    "run": "node src/dist/index.js",
+    "start": "node ./dist/backend/src/index.js",
     "dev": "nodemon src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "author": "Georgios Traianos",
   "license": "ISC",
