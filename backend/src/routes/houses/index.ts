@@ -1,13 +1,14 @@
 import { Router, Request, Response } from "express";
 import db from "../../db";
 import { HousesResponseItem } from "../../../../types";
+import { DBQuery } from "../../db/types";
 
 const route = Router();
 
 route.get('/', (req: Request, res: Response ) => {
     try {
         const params = Object.entries(req.query);
-        let query = null;
+        let query = null as unknown as DBQuery;
 
         // multiple parameters (no implementation yet)
         if(params.length > 1) throw Error('Only queries with a single parameter are allowed');

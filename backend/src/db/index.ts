@@ -24,7 +24,7 @@ const isValidQueryKey = (db: DB, key: string): boolean => db.validQueryKeys.find
 // query function
 const queryFunc = (db: DB, query: DBQuery | null) => {
     // empty query, return all items
-    if(!query) return db.houses;
+    if(!query || !query.key || !query.text) return db.houses;
     
     // check key is valid
     const { key, text } = query;
