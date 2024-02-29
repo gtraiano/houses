@@ -26,4 +26,8 @@ route.get('/', (req: Request, res: Response ) => {
     }
 });
 
+route.get('/querykeys', (req: Request, res: Response) => {
+    res.json(db.validQueryKeys);
+});
+
 export default route;
