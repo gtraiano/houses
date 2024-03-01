@@ -3,7 +3,7 @@ export type HousesResponse = HousesResponseItem[];
 export interface HousesResponseItem {
     id: string,
     name: string,
-    houseColors: string,
+    houseColours: string,
     founder: string,
     animal: string,
     element: string,
