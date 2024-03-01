@@ -1,6 +1,6 @@
 // simple DB interface for API data, all operations performed in memory
 // only Read operations currently allowed
-import { HousesDBQueryKey, HousesDB, HousesDBQuery, HousesResponse } from "../../../types";
+import { HousesDBQueryKey, HousesDB, HousesDBQuery, HousesAPIResponse } from "../../../types";
 import { fetchHouses } from "../controllers/houses";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
@@ -53,7 +53,7 @@ const db: HousesDB = {
         try {
             // local file exists
             const exists = existsSync(filePath);
-            let data: HousesResponse;
+            let data: HousesAPIResponse;
             
             if(!sync && exists) {
                 // parse local copy

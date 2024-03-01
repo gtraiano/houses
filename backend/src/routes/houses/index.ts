@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import db from "../../db";
-import { HousesResponseItem, HousesDBQuery } from "../../../../types";
+import { HousesAPIResponseItem, HousesDBQuery } from "../../../../types";
 
 const route = Router();
 
@@ -14,7 +14,7 @@ route.get('/', (req: Request, res: Response ) => {
         // get parameter and value (or null for both if it does not exist)
         const [key, text] = params[0] ?? [null, null];
         // update query object
-        query = { key: key as unknown as keyof HousesResponseItem, text: text as unknown as string };
+        query = { key: key as unknown as keyof HousesAPIResponseItem, text: text as unknown as string };
         const results = db.query(query);
         res.json(results);
     }
