@@ -5,12 +5,12 @@ import { setQuery } from "@/state/actions";
 import { debounce } from "@/utils/debounce";
 
 interface QueryBarProps {
-    keys: HousesDBQueryKey[],           // query keys
+    disabled?: boolean,
     defaultKey?: HousesDBQueryKey,      // default key
     exlcudeKeys?: HousesDBQueryKey[]    // keys to exclude
 }
 
-export default function QueryForm({ keys, defaultKey = 'name', exlcudeKeys = ['id'] }: QueryBarProps) {
+export default function QueryForm({ disabled = false, defaultKey = 'name', exlcudeKeys = ['id'] }: QueryBarProps) {
     const [{ query: { query, queryKeys } }, dispatch] = useStateValue();
     
     // exclude keys from list
@@ -30,7 +30,7 @@ export default function QueryForm({ keys, defaultKey = 'name', exlcudeKeys = ['i
 
     return (
         <form className="flex flex-col w-100 h-full" onInput={onQueryFormInput}>
-            <fieldset className="mb-3">
+            <fieldset className={`mb-3 ${disabled ? 'opacity-50' : ''}`} disabled={disabled}>
                 <legend className="w-full mb-3 text-center font-bold uppercase tracking-widest">
                     query
                 </legend>

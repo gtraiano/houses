@@ -1,42 +1,51 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import QueryForm from "@/components/QueryForm";
 import QueryResults from "@/components/QueryResults";
 import { setQueryKeys, setItems } from "@/state/actions";
 import { useStateValue } from "@/state";
+import housesDBController from "@/controllers/HousesDB";
+import { HousesDBError } from "../../../types";
 
 export default function Home() {
-	const [{ query: { query, queryKeys, url } }, dispatch] = useStateValue();
+	const [{ query: { query, queryKeys } }, dispatch] = useStateValue();
+	const [error, setError] = useState<HousesDBError | null>(null);
+	const [isBusy, setIsBusy] = useState<boolean>(false);
+
 
 	// fetch valid query keys on mount
 	useEffect(() => {
-		fetch(`${url}/querykeys`)
-			.then(res => res.json())
+		setIsBusy(true);
+		housesDBController.fetchers.fetchQueryKeys()
 			.then(keys => {
 				keys.length && dispatch(setQueryKeys(keys));
 			})
-			.catch(e => { console.error(e); });
+			.catch(e => { setError(e); console.error(e); })
+			.finally(() => { setIsBusy(false); });
 	}, []);
 
 	// query API on query change
 	useEffect(() => {
-		const qUrl = new URL(url);
-		qUrl.searchParams.append(query.key, query.text);
+		const params = new URLSearchParams();
+		params.append(query.key, query.text);
 		if(query.key && query.text.length) {
-			fetch(qUrl)
-				.then(res => res.json())
+			setIsBusy(true);
+			housesDBController.fetchers.queryHousesDB(params)
 				.then(data => { dispatch(setItems(data)); })
-				.catch(e => { console.error(e); })
+				.catch(e => { setError(e); console.error(e); })
+				.finally(() => { setIsBusy(false); });
 		}
 	}, [query]);
 
 	return (
-		<div className="container">
-			<div className="column side">
-				<QueryForm keys={queryKeys} />
+		<main className="flex flex-row place-content-center h-screen">
+		<div className="flex gap-3 w-full p-4">
+			<div className="w-1/8 column">
+				<QueryForm disabled={isBusy}/>
 			</div>
-			<div className="column">
-				<QueryResults/>
+			<div className="w-screen column overflow-auto">
+				<QueryResults busy={isBusy} error={error}/>
 			</div>
 		</div>
+		</main>
 	)
 }

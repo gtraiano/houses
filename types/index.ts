@@ -34,6 +34,11 @@ export interface HousesDB {
     validQueryKeys: [keyof HousesAPIResponseItem] | []
 }
 
+// query error message
+export interface HousesDBError {
+    error: string
+}
+
 // database query interface
 export interface HousesDBQuery {
     key: HousesDBQueryKey,
@@ -41,5 +46,5 @@ export interface HousesDBQuery {
 }
 // query only by object keys
 export type HousesDBQueryKey = keyof HousesAPIResponseItem;
-// database result type
-export type HousesDBQueryResult = HousesAPIResponseItem[];
+// database query result type (regular response, error response, query keys response)
+export type HousesDBQueryResult = HousesAPIResponseItem[] | HousesDBError | HousesDBQueryKey[];
