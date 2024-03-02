@@ -18,6 +18,7 @@ export default function QueryResults({ busy, error }: QueryResultsProps) {
     }, [items, text]);
     
     const resultsClassNames = () => [
+        'lg:grid lg:gap-1 lg:grid-cols-4 p-4 auto-rows-auto',
         hasResults ? 'visible' : 'invisible',
         'self-start',
         'w-full',
@@ -39,9 +40,9 @@ export default function QueryResults({ busy, error }: QueryResultsProps) {
     
     const messageClassNames = () => [
         'text-lg',
-        busy ? 'invisible' : 'visible',
+        busy || hasResults ? 'invisible' : 'visible',
         hasResults ? 'h-0' : '',
-        hasResults ? 'invisible' : 'visible'
+        'overflow-hidden'
     ].join(' ');
 
     // on error show message and render nothing else
@@ -54,14 +55,14 @@ export default function QueryResults({ busy, error }: QueryResultsProps) {
     }
     // render query results, spinner while busy, and message if no results or query
     return (
-        <div className="flex flex-col h-full items-center justify-center transition-all relative">
-            <ul className={resultsClassNames() + ' lg:grid lg:gap-1 lg:grid-cols-4 lg:grid-rows-5 list-decimal'}>{
+        <div className="flex flex-col h-full overflow-auto items-center justify-center transition-all relative">
+            <ul className={resultsClassNames()}>{
                 (items as HousesAPIResponseItem[]).map(h => <li key={h.id} className="mb-3"><HouseCard house={h}/></li>)
             }</ul>
             <span className={messageClassNames()}>
                 {text.length && !(items as HousesAPIResponseItem[]).length ? 'No results' : 'Enter a query'}
             </span>
-            <div className={spinnerClassNames()}><Spinner message={busy ? 'Fetching' : undefined}/></div>
+            <div className={spinnerClassNames()}><Spinner/></div>
         </div>
     )
 }
