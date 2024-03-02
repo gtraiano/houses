@@ -15,7 +15,7 @@ export default function Spinner({ message }: SpinnerProps) {
                     className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
                 />
             </div>
-            <span className="select-none">{message ?? 'Loading...'}</span>
+            {message?.trim().length && <span className="select-none">{message}</span>}
         </div>
     )
 }
