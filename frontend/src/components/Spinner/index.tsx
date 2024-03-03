@@ -1,7 +1,7 @@
 // credit https://tw-elements.com/docs/standard/components/spinners/
 
 interface SpinnerProps {
-    message?: string
+    message?: string | null
 }
 
 export default function Spinner({ message }: SpinnerProps) {

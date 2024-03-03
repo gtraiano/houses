@@ -9,18 +9,20 @@ import { HousesDBError } from "../../../types";
 export default function Home() {
 	const [{ query: { query, queryKeys } }, dispatch] = useStateValue();
 	const [error, setError] = useState<HousesDBError | null>(null);
+	const [message, setMessage] = useState<string | null>(null);
 	const [isBusy, setIsBusy] = useState<boolean>(false);
 
 
 	// fetch valid query keys on mount
 	useEffect(() => {
 		setIsBusy(true);
+		setMessage('Awaiting backend');
 		housesDBController.fetchers.fetchQueryKeys()
 			.then(keys => {
 				keys.length && dispatch(setQueryKeys(keys));
 			})
 			.catch(e => { setError(e); console.error(e); })
-			.finally(() => { setIsBusy(false); });
+			.finally(() => { setIsBusy(false); setMessage(null); });
 	}, []);
 
 	// query API on query change
@@ -43,7 +45,7 @@ export default function Home() {
 				<QueryForm disabled={isBusy}/>
 			</div>
 			<div className="w-screen column overflow-auto">
-				<QueryResults busy={isBusy} error={error}/>
+				<QueryResults busy={isBusy} message={message} error={error}/>
 			</div>
 		</div>
 		</main>

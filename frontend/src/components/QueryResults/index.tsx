@@ -6,10 +6,11 @@ import { useEffect, useState } from "react";
 
 interface QueryResultsProps {
     busy: boolean,
-    error: HousesDBError | null
+    message?: string | null,
+    error?: HousesDBError | null
 }
 
-export default function QueryResults({ busy, error }: QueryResultsProps) {
+export default function QueryResults({ busy, message, error }: QueryResultsProps) {
     const [{ items: { items }, query: { query: { text } } }] = useStateValue();
     const [hasResults, setHasResults] = useState<boolean>(false);
     
@@ -24,8 +25,10 @@ export default function QueryResults({ busy, error }: QueryResultsProps) {
         'w-full',
         hasResults ? 'h-full' : 'h-0',
         hasResults ? 'opacity-1' : 'opacity-0',
+        'transition-opacity'
     ].join(' ');
     
+    // spinner presented in an overlay
     const spinnerClassNames = () => [
         !busy ? 'invisible' : 'visible',
         !busy ? 'h-0' : 'h-full',
@@ -36,6 +39,7 @@ export default function QueryResults({ busy, error }: QueryResultsProps) {
         'absolute',
         'top-0',
         'left-0',
+        'transition-opacity'
     ].join(' ');
     
     const messageClassNames = () => [
@@ -48,21 +52,21 @@ export default function QueryResults({ busy, error }: QueryResultsProps) {
     // on error show message and render nothing else
     if(error) {
         return (
-            <div className="flex flex-col h-full items-center justify-center transition-all text-lg">
+            <div className="flex flex-col h-full items-center justify-center text-lg text-red-500">
                 { (error as HousesDBError).error }
             </div>
         )
     }
     // render query results, spinner while busy, and message if no results or query
     return (
-        <div className="flex flex-col h-full overflow-auto items-center justify-center transition-all relative">
+        <div className="flex flex-col h-full overflow-auto items-center justify-center relative">
             <ul className={resultsClassNames()}>{
                 (items as HousesAPIResponseItem[]).map(h => <li key={h.id} className="mb-3"><HouseCard house={h}/></li>)
             }</ul>
             <span className={messageClassNames()}>
                 {text.length && !(items as HousesAPIResponseItem[]).length ? 'No results' : 'Enter a query'}
             </span>
-            <div className={spinnerClassNames()}><Spinner/></div>
+            <div className={spinnerClassNames()}><Spinner message={message}/></div>
         </div>
     )
 }
