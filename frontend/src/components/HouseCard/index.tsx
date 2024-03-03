@@ -16,7 +16,7 @@ export default function HouseCard({ house }: HouseCardProps) {
     
     if(!house) return null;
     return (
-        <div className="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+        <div className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-white">
             <div className="p-4">
                 <div className="flex flex-row justify-between items-baseline mb-3">
                     <h2 className="font-bold text-xl">{house.name}</h2>
