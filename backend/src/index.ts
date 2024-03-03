@@ -6,7 +6,7 @@ import housesRouter from './routes/houses';
 
 // config
 dotenv.config({ path: '../.env' });
-const port = process.env.BACKEND_PORT;
+const port = process.env.BACKEND_PORT || 4000;
 
 const app = express();
 // allow for cross origin requests
