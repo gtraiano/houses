@@ -5,20 +5,25 @@ All source code written in `TypeScript`.
 
 The fronted has been setup by [`create-next-app`](https://www.npmjs.com/package/create-next-app), whereas for the backend we followed this [article](https://blog.logrocket.com/how-to-set-up-node-typescript-express/).
 
+Live demo:
+- [frontend](https://houses-e1mf.onrender.com)
+- [backend](https://houses-backend.onrender.com)
+
 ## Scripts
 For both parts of the project, the user needs to run `npm install` in each part's respective folder.
 
 ### Backend
-`npm run start` to start the server (after it has been built)
+`npm start` to start the server (after it has been built)
 
 `npm run dev` to star the server in development mode
 
-`npm run build` to build the server (output in .`/dist`)
+`npm run build` to build the server (build output in `./dist`)
 
 ### Frontend
 `npm start` to serve the frontend
 `npm run dev` to start development server
 `npm run build` to build the frontend
+
 ## Configuration
 The following environment variables need to be set in `./.env`.
 
@@ -67,27 +72,28 @@ Written in `React` (`Next.js` flavour), uses `Tailwind CSS` framework for stylin
 
 The application uses React's [Context API](https://react.dev/reference/react/useContext) for state management.
 
-### Architecture
+### Flow
 The application consists of two major UI elements
 1. a query form
 2. a query results grid
 
-A typical interaction scenario between the components follows
+A typical interaction scenario between the components is the following
 
-0. application startup preparation
+0. application startup
    1. fetch supported API query keys
    2. populate query form with supported query keys
 1. alter query state via the query form (set *key* and *value*)
 2. application performs an API query
-   1. alters query results state
+   1. alters query results state (or message state if necessary)
    2. on failure, alters local error state
 3. application populates the query results grid, or sets an information/error accordingly
 4. back to step (1.)
 
 ### Application State
-In the initial phase of development, state was kept locally at the topmost level component (`Home`). After taking into consideration the "...you will be asked to extend your code" hint, the decision was made to move towards a *"store"*-type state management. Thus enter `Context` API.
+In the early phases of development, state was kept locally at the topmost level component (`Home`). The component listened to `input` events from the query form and set the state accordingly. However, since the component had many responsibilities, it grew large. [Prop drilling would be of no help to the issue, plus we needed two-way data flow.]
 
-Scema of the application state
+After taking the issue into consideration, along with the "...you will be asked to extend your code" hint, the decision was made to move towards a *"store"*-type state management. Thus enter `Context` API.
+
 ```typescript
 const initialState: State = {
 	items: {                                    // query result
@@ -100,6 +106,7 @@ const initialState: State = {
 	}
 }
 ```
+<center><font size="2">Scema of the application state</font></center>
 
 ### Components
 #### `HouseCard`
@@ -118,5 +125,5 @@ A form with the necessary fields to perform an API request. No API requests oper
 #### `Spinner`
 A spinner animation component. Credit https://tw-elements.com/docs/standard/components/spinners/.
 
-### Pages
-#### Home
+#### `Home`
+Top level component, renders the query form and results grid. Performs all API requests.
