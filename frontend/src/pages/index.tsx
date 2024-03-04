@@ -3,11 +3,11 @@ import QueryForm from "@/components/QueryForm";
 import QueryResults from "@/components/QueryResults";
 import { setQueryKeys, setItems } from "@/state/actions";
 import { useStateValue } from "@/state";
-import housesDBController from "@/controllers/HousesDB";
 import { HousesDBError } from "../../../types";
+import housesAPIController from "@/controllers/HousesDB";
 
 export default function Home() {
-	const [{ query: { query, queryKeys } }, dispatch] = useStateValue();
+	const [{ query: { query } }, dispatch] = useStateValue();
 	const [error, setError] = useState<HousesDBError | null>(null);
 	const [message, setMessage] = useState<string | null>(null);
 	const [isBusy, setIsBusy] = useState<boolean>(false);
@@ -17,7 +17,7 @@ export default function Home() {
 	useEffect(() => {
 		setIsBusy(true);
 		setMessage('Awaiting backend');
-		housesDBController.fetchers.fetchQueryKeys()
+		housesAPIController.fetchers.queryKeys.request()
 			.then(keys => {
 				keys.length && dispatch(setQueryKeys(keys));
 			})
@@ -31,7 +31,7 @@ export default function Home() {
 		params.append(query.key, query.text);
 		if(query.key && query.text.length) {
 			setIsBusy(true);
-			housesDBController.fetchers.queryHousesDB(params)
+			housesAPIController.fetchers.houses.request(params)
 				.then(data => { dispatch(setItems(data)); })
 				.catch(e => { setError(e); console.error(e); })
 				.finally(() => { setIsBusy(false); });
