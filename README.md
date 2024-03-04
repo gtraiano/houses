@@ -106,7 +106,7 @@ const initialState: State = {
 	}
 }
 ```
-<center><font size="2">Scema of the application state</font></center>
+<center><font size="2">Schema of the application state</font></center>
 
 ### Components
 #### `HouseCard`
