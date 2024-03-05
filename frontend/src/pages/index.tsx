@@ -33,7 +33,7 @@ export default function Home() {
 			setIsBusy(true);
 			housesAPIController.endpoints.houses.request(params)
 				.then(data => { dispatch(setItems(data)); })
-				.catch(e => { setError(e); console.error(e); })
+				.catch(e => { setError(e.error ? e : { error: e.message }); console.error(e); })
 				.finally(() => { setIsBusy(false); });
 		}
 	}, [query]);
