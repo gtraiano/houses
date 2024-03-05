@@ -27,11 +27,11 @@ For both parts of the project, the user needs to run `npm install` in each part'
 ## Configuration
 The following environment variables need to be set in `./.env`.
 
-| Variable   | Description |
-|----------|------|
-|`BACKEND_URL`|backend URL|
-|`BACKEND_PORT`|backend port (optional, defaults to `4000`)|
-|`REMOTE_API_URL`|fallback backend URL|
+|Variable|Description|Default Value|
+|-|-|-|
+|`BACKEND_URL`|backend URL| |
+|`BACKEND_PORT`|backend port (optional)|4000|
+|`REMOTE_API_URL`|fallback backend URL|https://wizard-world-api.herokuapp.com|
 
 ## Backend
 Written in `Node.js` using `Express` framework.
@@ -39,7 +39,7 @@ Written in `Node.js` using `Express` framework.
 ### Database
 All API data access/storage is performed in memory, with permanent storage in a local JSON file (for backup purposes).
 
-On startup, the backend fetches all house data from https://wizard-world-api.herokuapp.com/houses. Should an error occur, it serves data from its local copy.
+On startup, the backend fetches all house data from `REMOTE_API_URL`. Should an error occur, it serves data from its local copy.
 
 ### REST API
 Per the project requirements, the backend implements a `/houses` endpoint.
