@@ -39,7 +39,8 @@ export default function QueryResults({ busy, message, error }: QueryResultsProps
         'absolute',
         'top-0',
         'left-0',
-        'transition-opacity'
+        'transition-opacity',
+        'rounded-lg'
     ].join(' ');
     
     const messageClassNames = () => [
