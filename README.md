@@ -94,6 +94,7 @@ In the early phases of development, state was kept locally at the topmost level 
 
 After taking the issue into consideration, along with the "...you will be asked to extend your code" hint, the decision was made to move towards a *"store"*-type state management. Thus enter `Context` API.
 
+
 ```typescript
 const initialState: State = {
 	items: {                                    // query result
@@ -107,6 +108,34 @@ const initialState: State = {
 }
 ```
 <center><font size="2">Schema of the application state</font></center>
+
+### API Controller
+Class `HousesAPIController` performs requests to the API. It exposes a `HousesAPIControllerRequest` member for each endpoint. Although the supported endpoints are preset, the class offers a method to add new endpoints.
+
+```typescript
+interface HousesAPIController {
+    baseUrl: URL,                                                   // API base URL
+    endpoints: {
+        queryKeys: HousesAPIControllerRequest<HousesDBQueryKey[]>,  // /houses/querykeys endpoint
+        houses: HousesAPIControllerRequest<HousesDBQueryResult>,    // /houses endpoint
+        [key: string]: HousesAPIControllerRequest<any>              // further endpoints to be added
+    }
+}
+```
+<center><font size="2">API controller interface with preset endpoints</font></center>
+
+The generic API request interface exposes an endpoint string, a request method, plus two optional properties: an abort controller and an abort method.
+
+```typescript
+// API request
+interface HousesAPIControllerRequest<T> {
+	endpoint: string,                           // endpoint
+    abortController?: AbortController | null,   // abort controller
+    abort?: () => void,                         // abort request
+    request: (...args: any) => Promise<T>       // request fetcher
+}
+```
+<center><font size="2">API request interface</font></center>
 
 ### Components
 #### `HouseCard`
