@@ -17,7 +17,7 @@ export default function Home() {
 	useEffect(() => {
 		setIsBusy(true);
 		setMessage('Awaiting backend');
-		housesAPIController.fetchers.queryKeys.request()
+		housesAPIController.endpoints.queryKeys.request()
 			.then(keys => {
 				keys.length && dispatch(setQueryKeys(keys));
 			})
@@ -31,7 +31,7 @@ export default function Home() {
 		params.append(query.key, query.text);
 		if(query.key && query.text.length) {
 			setIsBusy(true);
-			housesAPIController.fetchers.houses.request(params)
+			housesAPIController.endpoints.houses.request(params)
 				.then(data => { dispatch(setItems(data)); })
 				.catch(e => { setError(e); console.error(e); })
 				.finally(() => { setIsBusy(false); });
