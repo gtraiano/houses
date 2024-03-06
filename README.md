@@ -107,7 +107,7 @@ const initialState: State = {
 	}
 }
 ```
-<center><font size="2">Schema of the application state</font></center>
+<p align="center"><font size="2">Schema of the application state</font></p>
 
 ### API Controller
 Class `HousesAPIController` performs requests to the API. It exposes a `HousesAPIControllerRequest` member for each endpoint. Although the supported endpoints are preset, the class offers a method to add new endpoints.
@@ -122,7 +122,7 @@ interface HousesAPIController {
     }
 }
 ```
-<center><font size="2">API controller interface with preset endpoints</font></center>
+<p align="center"><font size="2">API controller interface with preset endpoints</font></p>
 
 The generic API request interface exposes an endpoint string, a request method, plus two optional properties: an abort controller and an abort method.
 
@@ -135,7 +135,7 @@ interface HousesAPIControllerRequest<T> {
     request: (...args: any) => Promise<T>       // request fetcher
 }
 ```
-<center><font size="2">API request interface</font></center>
+<p align="center"><font size="2">API request interface</font></p>
 
 ### Components
 #### `HouseCard`
