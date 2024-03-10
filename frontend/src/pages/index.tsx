@@ -3,12 +3,12 @@ import QueryForm from "@/components/QueryForm";
 import QueryResults from "@/components/QueryResults";
 import { setQueryKeys, setItems } from "@/state/actions";
 import { useStateValue } from "@/state";
-import { HousesDBError } from "../../../types";
-import housesAPIController from "@/controllers/HousesDB";
+import { HousesDBError, HousesDBQueryKey } from "../../../types";
+import controller from "@/controllers/HousesAPI/";
 
 export default function Home() {
 	const [{ query: { query } }, dispatch] = useStateValue();
-	const [error, setError] = useState<HousesDBError | null>(null);
+	const [error, setError] = useState<Error| HousesDBError | null>(null);
 	const [message, setMessage] = useState<string | null>(null);
 	const [isBusy, setIsBusy] = useState<boolean>(false);
 
@@ -17,12 +17,16 @@ export default function Home() {
 	useEffect(() => {
 		setIsBusy(true);
 		setMessage('Awaiting backend');
-		housesAPIController.endpoints.queryKeys.request()
+		controller.endpoints['houses/querykeys'].request()
 			.then(keys => {
+				keys = keys as HousesDBQueryKey[];
 				keys.length && dispatch(setQueryKeys(keys));
 			})
-			.catch(e => { setError(e); console.error(e); })
-			.finally(() => { setIsBusy(false); setMessage(null); });
+			.catch(e => {
+				setError(e);
+				console.error(e);
+			})
+			.finally(() => { setMessage(null); });
 	}, []);
 
 	// query API on query change
@@ -31,12 +35,18 @@ export default function Home() {
 		params.append(query.key, query.text);
 		if(query.key && query.text.length) {
 			setIsBusy(true);
-			housesAPIController.endpoints.houses.request(params)
+			controller.endpoints['houses'].request(params)
 				.then(data => { dispatch(setItems(data)); })
-				.catch(e => { setError(e.error ? e : { error: e.message }); console.error(e); })
-				.finally(() => { setIsBusy(false); });
+				.catch(e => {
+					setError(e);
+					console.error(e);
+				});
 		}
 	}, [query]);
+
+	useEffect(() => {
+		setIsBusy(controller.endpoints['houses'].busy || controller.endpoints['houses/querykeys'].busy);
+	}, [controller.endpoints['houses'].busy, controller.endpoints['houses/querykeys'].busy]);
 
 	return (
 		<main className="flex flex-row place-content-center h-screen">

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 interface QueryResultsProps {
     busy: boolean,
     message?: string | null,
-    error?: HousesDBError | null
+    error?: HousesDBError | null | Error
 }
 
 export default function QueryResults({ busy, message, error }: QueryResultsProps) {
@@ -54,7 +54,7 @@ export default function QueryResults({ busy, message, error }: QueryResultsProps
     if(error) {
         return (
             <div className="flex flex-col h-full items-center justify-center text-lg text-red-500">
-                { (error as HousesDBError).error }
+                { (error as HousesDBError).error ?? (error as Error).message }
             </div>
         )
     }
