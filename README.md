@@ -68,7 +68,7 @@ A summary table of all supported endpoints/parameters combinations follows
 The API currently supports queries with **only a single** parameter.
 
 ## Frontend
-Written in `React` (`Next.js` flavour), uses `Tailwind CSS` framework for styling.
+Written in `React`, uses `Tailwind CSS` framework for styling.
 
 The application uses React's [Context API](https://react.dev/reference/react/useContext) for state management.
 
