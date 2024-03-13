@@ -11,6 +11,7 @@ export default function Home() {
 	const [error, setError] = useState<Error| HousesDBError | null>(null);
 	const [message, setMessage] = useState<string | null>(null);
 	const [isBusy, setIsBusy] = useState<boolean>(false);
+	let isBusyController = controller.endpoints['houses'].busy || controller.endpoints['houses/querykeys'].busy;
 
 
 	// fetch valid query keys on mount
@@ -45,8 +46,8 @@ export default function Home() {
 	}, [query]);
 
 	useEffect(() => {
-		setIsBusy(controller.endpoints['houses'].busy || controller.endpoints['houses/querykeys'].busy);
-	}, [controller.endpoints['houses'].busy, controller.endpoints['houses/querykeys'].busy]);
+		setIsBusy(isBusyController);
+	}, [isBusyController]);
 
 	return (
 		<main className="flex flex-row place-content-center h-screen">
