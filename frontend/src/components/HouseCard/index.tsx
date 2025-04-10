@@ -18,7 +18,7 @@ export default function HouseCard({ house }: HouseCardProps) {
     return (
         <div className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-white">
             <div className="p-4">
-                <div className="flex flex-row justify-between items-baseline mb-3">
+                <div className="flex flex-row justify-between flex-wrap items-baseline mb-3">
                     <h2 className="font-bold text-xl">{house.name}</h2>
                     <span>{house.animal}</span>
                 </div>
